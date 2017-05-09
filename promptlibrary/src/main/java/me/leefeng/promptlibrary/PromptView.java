@@ -179,6 +179,7 @@ class PromptView extends ImageView {
             if (buttons.length > 1) {
 
                 canvas.drawLine(popWidth / 2, top, popWidth / 2, popHeight, paint);
+
                 for (int i = 0; i < buttons.length; i++) {
                     PromptButton button = buttons[i];
                     if (button.isFocus()) {
@@ -187,9 +188,9 @@ class PromptView extends ImageView {
                         paint.setColor(button.getFocusBacColor());
                         paint.setStyle(Paint.Style.FILL);
 //                        paint.setAlpha(120);
-                        canvas.drawRect(buttonW * i, top, buttonW * (i + 1), top + buttonH - round, paint);
+                        canvas.drawRect(buttonW * i, top + 1, buttonW * (i + 1), top + 1 + buttonH - round, paint);
                         if (i == 0) {
-                            canvas.drawCircle(buttonW * i + round, top + buttonH - round, round, paint);
+                            canvas.drawCircle(round, top + buttonH - round, round, paint);
                             canvas.drawRect(round, top + buttonH - round, buttonW * (i + 1), top + buttonH, paint);
                         } else if (i == 1) {
                             canvas.drawCircle(buttonW * 2 - round, top + buttonH - round, round, paint);

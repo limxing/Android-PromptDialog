@@ -99,7 +99,7 @@ public class PromptDialog {
     }
 
     /**
-     * close,程序调用的关闭，非LOADING状态
+     * close
      */
     public void dismiss() {
         if (isShowing && !outAnimRunning) {
@@ -151,7 +151,7 @@ public class PromptDialog {
     }
 
     /**
-     * 展示自定义的状态提示框
+     * show custome dialog
      *
      * @param icon
      * @param msg
@@ -210,7 +210,7 @@ public class PromptDialog {
     }
 
     /**
-     * 检查 loadview是否咋屏幕中，没有就添加
+     * promptview isshowing
      */
     private void checkLoadView() {
         if (!isShowing) {
@@ -222,7 +222,7 @@ public class PromptDialog {
     }
 
     /**
-     * 消失停留一秒的动画,如正在执行动画 停止
+     * dismiss dialog and start animation
      */
     private void dissmissAni(boolean isCancle) {
         if (dissmissAnim == null) {

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'//添加
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -28,12 +27,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-}
-publish {
-    userOrg = 'limxing'//bintray.com用户名
-    groupId = 'me.leefeng'//jcenter上的路径
-    artifactId = 'prompt'//项目名称
-    publishVersion = '0.0.1'//版本号
-    desc = 'prompt dialog view'//描述，不重要
-    website = 'https://github.com/limxing/LeefengLibrary'//网站，不重要
+
+
 }

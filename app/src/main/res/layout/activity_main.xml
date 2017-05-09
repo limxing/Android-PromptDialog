@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_marginTop="20dp"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -19,7 +20,7 @@
                 android:id="@+id/main_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="开始" />
+                android:text="警告" />
 
             <Button
                 android:id="@+id/main_loading"
@@ -61,13 +62,13 @@
                 android:id="@+id/main_warn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="警告" />
+                android:text="弹窗" />
 
             <Button
                 android:id="@+id/main_system"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="" />
+                android:text="立即关闭" />
 
         </LinearLayout>
     </LinearLayout>

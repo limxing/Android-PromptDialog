@@ -23,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
         promptDialog = new PromptDialog(this);
         promptDialog.getDefaultBuilder().touchAble(true).round(3);
 
+        findViewById(R.id.main_start).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promptDialog.showWarn("注意");
+            }
+        });
 
         findViewById(R.id.main_loading).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_system).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(MainActivity.this).setTitle("标题").setCancelable(true).show();
+                promptDialog.dismissImmediately();
             }
         });
         findViewById(R.id.main_customer).setOnClickListener(new View.OnClickListener() {
@@ -84,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
                 promptDialog.showCustom(R.mipmap.ic_launcher, "自定义图标的");
             }
         });
+
+
 
     }
 

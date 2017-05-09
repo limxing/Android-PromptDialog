@@ -5,10 +5,11 @@ import android.graphics.RectF;
 
 /**
  * Created by FengTing on 2017/5/8.
+ * https://www.github.com/limxing
  */
 
 public class PromptButton {
-    private String text = "确定";
+    private String text = "confirm";
     private boolean focus;
     private int textColor = Color.BLACK;
     private float textSize = 18;
