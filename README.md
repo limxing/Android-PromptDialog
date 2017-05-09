@@ -3,7 +3,7 @@
 
 <img src="screen1.gif"/>
 
-####1、添加依赖
+#### 1、添加依赖
 
 ```
 allprojects {
@@ -23,7 +23,7 @@ dependencies {
 }
 
 ```
-####2、创建对象及使用方法
+#### 2、创建对象及使用方法
 ```
 promptDialog = new PromptDialog(this);
 promptDialog.showLoading("正在登录");
@@ -55,7 +55,7 @@ promptDialog.dismissImmediately();
 **/
 ```
 
-####License
+#### License
 Copyright  2017 Limxing
 
 Licensed under the Apache License, Version 2.0 (the "License");
