@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/main_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="开始" />
+
+            <Button
+                android:id="@+id/main_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="加载中" />
+
+            <Button
+                android:id="@+id/main_success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="成功" />
+
+            <Button
+                android:id="@+id/main_fail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="失败" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/main_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="信息" />
+
+            <Button
+                android:id="@+id/main_customer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自定义" />
+
+            <Button
+                android:id="@+id/main_warn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="警告" />
+
+            <Button
+                android:id="@+id/main_system"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
