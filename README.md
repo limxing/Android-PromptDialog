@@ -1,5 +1,5 @@
 # Android-PromptDialog
-通知窗口，正在加载中，确认对话框,非组合控件，自定义ImageView实现，感谢star
+提示窗口，正在加载中，确认对话框,非组合控件，自定义ImageView实现，感谢star
 
 <img src="screen1.gif"/>
 
@@ -53,6 +53,13 @@ promptDialog.dismissImmediately();
                     }
           }), confirm);
 **/
+```
+#### 3、自定义窗口style
+```
+//自定义提示框Style
+promptDialog.getDefaultBuilder().touchAble(true).round(3)..
+//自定义弹窗对话框Style
+promptDialog.getAlertDefaultBuilder().touchAble(false).round(5)...
 ```
 
 #### License
