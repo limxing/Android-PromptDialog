@@ -1,5 +1,5 @@
 # Android-PromptDialog
-通知窗口，正在加载中，确认对话框
+通知窗口，正在加载中，确认对话框,非组合控件，自定义ImageView实现，感谢star
 
 <img src="screen1.gif"/>
 
