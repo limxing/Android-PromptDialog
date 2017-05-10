@@ -1,7 +1,7 @@
 # Android-PromptDialog
 提示窗口，正在加载中，确认对话框,非组合控件，自定义ImageView实现，感谢star
 
-<img src="screen1.gif"/>
+<img src="screen1.gif"/><img src="screen2.jpg"/>
 
 #### 1、添加依赖
 
@@ -61,7 +61,14 @@ promptDialog.getDefaultBuilder().touchAble(true).round(3)..
 //自定义弹窗对话框Style
 promptDialog.getAlertDefaultBuilder().touchAble(false).round(5)...
 ```
-
+#### 按需处理返回键
+```
+  @Override
+    public void onBackPressed() {
+        if (promptDialog.onBackPressed())
+            super.onBackPressed();
+    }
+```
 #### License
 Copyright  2017 Limxing
 

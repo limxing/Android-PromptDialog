@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         promptDialog = new PromptDialog(this);
         promptDialog.getDefaultBuilder().touchAble(true).round(3);
 
+
+
         findViewById(R.id.main_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_system).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                promptDialog.dismissImmediately();
+                promptDialog.dismiss();
             }
         });
         findViewById(R.id.main_customer).setOnClickListener(new View.OnClickListener() {
