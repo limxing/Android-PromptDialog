@@ -98,6 +98,9 @@ class PromptView extends ImageView {
             case PROMPT_ALERT_WARN:
 
                 popWidth = Math.max(textRect.width() + pad * 2, 2 * buttonW);
+                if (buttonW * 2 < textRect.width() + pad * 2) {
+                    buttonW = (textRect.width() + pad * 2) / 2;
+                }
 
                 popHeight = textRect.height() + 3 * pad + height * 2 + buttonH;
                 break;
