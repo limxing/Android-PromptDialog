@@ -17,6 +17,8 @@ public class PromptButton {
     private PromptButtonListener listener;
     private int focusBacColor= Color.parseColor("#DCDCDC");
 
+    private boolean dismissAfterClick=true;
+
     public PromptButton(String text, PromptButtonListener listener) {
         this.text = text;
         this.listener = listener;
@@ -80,5 +82,13 @@ public class PromptButton {
 
     public void setFocusBacColor(int focusBacColor) {
         this.focusBacColor = focusBacColor;
+    }
+
+    public boolean isDismissAfterClick() {
+        return dismissAfterClick;
+    }
+
+    public void setDismissAfterClick(boolean dismissAfterClick) {
+        this.dismissAfterClick = dismissAfterClick;
     }
 }

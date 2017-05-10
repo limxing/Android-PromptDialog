@@ -295,9 +295,11 @@ class PromptView extends ImageView {
                     if (event.getAction() == MotionEvent.ACTION_UP) {
                         button.setFocus(false);
                         invalidate();
+                        if (button.isDismissAfterClick())
+                            promptDialog.dismiss();
                         if (button.getListener() != null)
                             button.getListener().onClick(button);
-                        promptDialog.dismiss();
+
                     }
                     return true;
                 }
