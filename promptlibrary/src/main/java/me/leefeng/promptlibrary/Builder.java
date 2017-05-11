@@ -24,6 +24,7 @@ public class Builder {
     boolean cancleAble;
     int icon;
     String text;
+    long loadingDuration;
 
     public Builder backColor(int backColor) {
         this.backColor = backColor;
@@ -111,6 +112,11 @@ public class Builder {
 
     public Builder text(String msg) {
         this.text = msg;
+        return this;
+    }
+
+    public Builder loadingDuration(long duration) {
+        this.loadingDuration = duration;
         return this;
     }
 }

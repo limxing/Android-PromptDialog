@@ -46,11 +46,11 @@ public class PromptDialog {
         this(Builder.getDefaultBuilder(), context);
     }
 
-   public  PromptDialog(Builder builder, Activity context) {
+    public PromptDialog(Builder builder, Activity context) {
         decorView = (ViewGroup) context.getWindow().getDecorView().findViewById(android.R.id.content);
 
         promptView = new PromptView(context, builder, this);
-       initAnim(context.getResources().getDisplayMetrics().widthPixels, context.getResources().getDisplayMetrics().heightPixels);
+        initAnim(context.getResources().getDisplayMetrics().widthPixels, context.getResources().getDisplayMetrics().heightPixels);
         inputmanger = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -102,9 +102,15 @@ public class PromptDialog {
      * close
      */
     public void dismiss() {
+
         if (isShowing && !outAnimRunning) {
             if (promptView.getBuilder().withAnim) {
 //                outAnim.setStartOffset(delayTime);
+                if (promptView.getCurrentType() == PromptView.PROMPT_LOADING) {
+                    outAnim.setStartOffset(promptView.getBuilder().loadingDuration);
+                } else {
+                    outAnim.setStartOffset(0);
+                }
                 promptView.startAnimation(outAnim);
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -279,7 +285,7 @@ public class PromptDialog {
     }
 
     public boolean onBackPressed() {
-        if (isShowing&&promptView.getCurrentType() == PromptView.PROMPT_LOADING) {
+        if (isShowing && promptView.getCurrentType() == PromptView.PROMPT_LOADING) {
             return false;
         }
         if (isShowing && promptView.getCurrentType() == PromptView.PROMPT_ALERT_WARN) {

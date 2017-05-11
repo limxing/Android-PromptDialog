@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         promptDialog = new PromptDialog(this);
-        promptDialog.getDefaultBuilder().touchAble(true).round(3);
+        promptDialog.getDefaultBuilder().touchAble(true).round(3).loadingDuration(3000);
 
 
 
