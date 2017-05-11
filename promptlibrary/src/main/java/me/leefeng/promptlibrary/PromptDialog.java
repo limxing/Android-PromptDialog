@@ -279,7 +279,7 @@ public class PromptDialog {
     }
 
     public boolean onBackPressed() {
-        if (promptView.getCurrentType() == PromptView.PROMPT_LOADING) {
+        if (isShowing&&promptView.getCurrentType() == PromptView.PROMPT_LOADING) {
             return false;
         }
         if (isShowing && promptView.getCurrentType() == PromptView.PROMPT_ALERT_WARN) {
