@@ -19,7 +19,7 @@ allprojects {
 ```
 dependencies {
     ...
-    compile 'com.github.limxing:Android-PromptDialog:1.0.2'
+    compile 'com.github.limxing:Android-PromptDialog:1.0.4'
 }
 
 ```
@@ -57,7 +57,7 @@ promptDialog.dismissImmediately();
 #### 3、自定义窗口style
 ```
 //自定义提示框Style
-promptDialog.getDefaultBuilder().touchAble(true).round(3)..
+promptDialog.getDefaultBuilder().touchAble(true).round(3).loadingDuration(3000)..
 //自定义弹窗对话框Style
 promptDialog.getAlertDefaultBuilder().touchAble(false).round(5)...
 ```
