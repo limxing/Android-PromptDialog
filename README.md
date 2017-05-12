@@ -1,6 +1,6 @@
 # Android-PromptDialog
 提示窗口，正在加载中，确认对话框,非组合控件，自定义ImageView实现，感谢star
-
+[![](https://jitpack.io/v/limxing/Android-PromptDialog.svg)](https://jitpack.io/#limxing/Android-PromptDialog)
 <img src="screen1.gif"/><img src="screen2.jpg"/>
 
 #### 1、添加依赖
