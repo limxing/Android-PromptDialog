@@ -9,6 +9,7 @@ import android.graphics.RectF;
  */
 
 public class PromptButton {
+    private  boolean isDelyClick;
     private String text = "confirm";
     private boolean focus;
     private int textColor = Color.BLACK;
@@ -22,6 +23,11 @@ public class PromptButton {
     public PromptButton(String text, PromptButtonListener listener) {
         this.text = text;
         this.listener = listener;
+    }
+    public PromptButton(String text, PromptButtonListener listener,boolean delayClick) {
+        this.text = text;
+        this.listener = listener;
+        this.isDelyClick=delayClick;
     }
 
     public boolean isFocus() {
@@ -90,5 +96,13 @@ public class PromptButton {
 
     public void setDismissAfterClick(boolean dismissAfterClick) {
         this.dismissAfterClick = dismissAfterClick;
+    }
+
+    public boolean isDelyClick() {
+        return isDelyClick;
+    }
+
+    public void setDelyClick(boolean delyClick) {
+        isDelyClick = delyClick;
     }
 }

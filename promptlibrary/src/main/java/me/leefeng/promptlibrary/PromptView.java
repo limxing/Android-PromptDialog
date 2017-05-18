@@ -286,7 +286,7 @@ class PromptView extends ImageView {
             if (builder.cancleAble && event.getAction() == MotionEvent.ACTION_DOWN && !roundTouchRect.contains(x, y)) {
                 promptDialog.dismiss();
             }
-            for (PromptButton button : buttons) {
+            for (final PromptButton button : buttons) {
                 if (button.getRect().contains(x, y)) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         button.setFocus(true);
@@ -297,8 +297,19 @@ class PromptView extends ImageView {
                         invalidate();
                         if (button.isDismissAfterClick())
                             promptDialog.dismiss();
-                        if (button.getListener() != null)
-                            button.getListener().onClick(button);
+                        if (button.getListener() != null) {
+                            if (button.isDelyClick()) {
+                                postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        button.getListener().onClick(button);
+                                    }
+                                }, PromptDialog.viewAnimDuration + 100);
+                            } else {
+                                button.getListener().onClick(button);
+                            }
+
+                        }
 
                     }
                     return true;

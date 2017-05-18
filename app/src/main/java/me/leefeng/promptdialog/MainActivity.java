@@ -1,7 +1,9 @@
 package me.leefeng.promptdialog;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
         promptDialog = new PromptDialog(this);
         promptDialog.getDefaultBuilder().touchAble(true).round(3).loadingDuration(3000);
-
 
 
         findViewById(R.id.main_start).setOnClickListener(new View.OnClickListener() {
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         });
         confirm.setTextColor(Color.parseColor("#DAA520"));
         confirm.setFocusBacColor(Color.parseColor("#FAFAD2"));
+        confirm.setDelyClick(true);
         findViewById(R.id.main_warn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,8 +95,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("sadas");
+        progressDialog.show();
     }
 
     /**

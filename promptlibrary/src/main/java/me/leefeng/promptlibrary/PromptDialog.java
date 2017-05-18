@@ -30,7 +30,7 @@ public class PromptDialog {
     private ValueAnimator dissmissAnim;
     private boolean dissmissAnimCancle;
     private boolean outAnimRunning;
-    private long viewAnimDuration = 300;
+    public  static long viewAnimDuration = 300;
     private boolean isShowing;
 
     /**
@@ -40,6 +40,10 @@ public class PromptDialog {
      */
     public void setViewAnimDuration(long viewAnimDuration) {
         this.viewAnimDuration = viewAnimDuration;
+    }
+
+    public long getViewAnimDuration() {
+        return viewAnimDuration;
     }
 
     public void onDetach() {
@@ -79,7 +83,7 @@ public class PromptDialog {
         alphaAnimation.setDuration(200);
         outAnim.addAnimation(scaleAnimation);
         outAnim.addAnimation(alphaAnimation);
-        outAnim.setDuration(300);
+        outAnim.setDuration(viewAnimDuration);
         outAnim.setInterpolator(new AccelerateInterpolator());
         this.outAnim = outAnim;
 
