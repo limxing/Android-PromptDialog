@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -30,7 +31,7 @@ public class PromptDialog {
     private ValueAnimator dissmissAnim;
     private boolean dissmissAnimCancle;
     private boolean outAnimRunning;
-    public  static long viewAnimDuration = 300;
+    public static long viewAnimDuration = 300;
     private boolean isShowing;
 
     /**
@@ -179,6 +180,16 @@ public class PromptDialog {
 
     public void showSuccess(String msg, boolean withAnim) {
         showSomthing(R.drawable.ic_prompt_success, PromptView.PROMPT_SUCCESS, msg, withAnim);
+    }
+
+    public void showSuccessDelay(final String msg, long delay) {
+        decorView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showSuccess( msg);
+            }
+        },delay);
+
     }
 
     /**
