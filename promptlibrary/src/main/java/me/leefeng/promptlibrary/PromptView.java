@@ -398,4 +398,9 @@ class PromptView extends ImageView {
     public int getCurrentType() {
         return currentType;
     }
+
+    public void setText(String msg) {
+        builder.text(msg);
+        invalidate();
+    }
 }

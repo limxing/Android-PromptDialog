@@ -262,14 +262,18 @@ public class PromptDialog {
      * @param withAnim 是否动画进入
      */
     public void showLoading(String msg, boolean withAnim) {
-        Builder builder = Builder.getDefaultBuilder();
-        builder.icon(R.drawable.ic_prompt_loading);
-        builder.text(msg);
-        promptView.setBuilder(builder);
-        closeInput();
-        checkLoadView(withAnim);
-        promptView.showLoading();
-        dissmissAni(true);
+        if (promptView.getCurrentType()==PromptView.PROMPT_LOADING) {
+            Builder builder = Builder.getDefaultBuilder();
+            builder.icon(R.drawable.ic_prompt_loading);
+            builder.text(msg);
+            promptView.setBuilder(builder);
+            closeInput();
+            checkLoadView(withAnim);
+            promptView.showLoading();
+            dissmissAni(true);
+        }else{
+            promptView.setText(msg);
+        }
     }
 
     public void showLoading(String msg) {
