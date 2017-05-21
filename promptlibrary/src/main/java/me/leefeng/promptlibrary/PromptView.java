@@ -70,7 +70,7 @@ class PromptView extends ImageView {
     @Override
     protected void onDraw(Canvas canvas) {
 
-
+if (paint==null) return;
         if (canvasWidth == 0) {
             canvasWidth = getWidth();
             canvasHeight = getHeight();
@@ -90,7 +90,7 @@ class PromptView extends ImageView {
         paint.setTextSize(density * builder.textSize);
         paint.setAntiAlias(true);
         paint.getTextBounds(text, 0, text.length(), textRect);
-        paint.getTextBounds(text, 0, text.length(), textRect);
+//        paint.getTextBounds(text, 0, text.length(), textRect);
         float popWidth = 0;
         float popHeight = 0;
 
