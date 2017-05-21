@@ -69,17 +69,24 @@ class PromptView extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-if (paint==null) return;
-        if (canvasWidth == 0) {
-            canvasWidth = getWidth();
-            canvasHeight = getHeight();
-        }
+        if (paint == null) return;
         paint.reset();
         paint.setAntiAlias(true);
         paint.setColor(builder.backColor);
         paint.setAlpha(builder.backAlpha);
         canvas.drawRect(0, 0, canvasWidth, canvasHeight, paint);
+
+        if(buttons.length>2){
+
+
+
+            return;
+        }
+
+        if (canvasWidth == 0) {
+            canvasWidth = getWidth();
+            canvasHeight = getHeight();
+        }
 
         String text = builder.text;
         float pad = builder.padding * density;
