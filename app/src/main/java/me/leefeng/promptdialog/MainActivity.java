@@ -86,10 +86,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                promptDialog.dismiss();
-
-
-                promptDialog.showAlertSheet("",true,new PromptButton("取消1",null),
-                        new PromptButton("取消2",null),new PromptButton("取消3",null),new PromptButton("取消4",null));
+//                promptDialog.getAlertDefaultBuilder().sheetCellPad(0).round(0);
+                PromptButton cancle = new PromptButton("取消", null);
+                cancle.setTextColor(Color.BLUE);
+                promptDialog.showAlertSheet("", true, cancle,
+                        new PromptButton("取消2", null), new PromptButton("取消2", null),
+                        new PromptButton("取消3", null), new PromptButton("取消4", null));
 
 
             }

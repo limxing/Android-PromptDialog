@@ -26,6 +26,26 @@ public class Builder {
     String text;
     long loadingDuration;
 
+    int sheetPressAlph=15;
+    int sheetCellHeight=48;
+    int sheetCellPad=13;
+
+    public Builder sheetCellPad(int pad){
+        this.sheetCellPad=pad;
+        return this;
+    }
+
+    public Builder sheetCellHeight(int height){
+        this.sheetCellHeight=height;
+        return this;
+    }
+
+
+    public Builder sheetPressAlph(int alpha){
+        this.sheetPressAlph=alpha;
+        return this;
+    }
+
     public Builder backColor(int backColor) {
         this.backColor = backColor;
         return this;

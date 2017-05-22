@@ -54,10 +54,11 @@ class PromptView extends ImageView {
     private float bottomHeight;
     private float sheetHeight;
 
-    private static final int sheetCellHeight = 54;
-    private static final int sheetCellPad = 13;
+//    private static final int sheetCellHeight = 54;
+//    private static final int sheetCellPad = 13;
+//    private final int pressAlph = 15;
 
-    private final int pressAlph = 15;
+
 
     public PromptView(Context context) {
         super(context);
@@ -112,12 +113,13 @@ class PromptView extends ImageView {
             paint.setAntiAlias(true);
             paint.setColor(Color.WHITE);
             paint.setAlpha(builder.roundAlpha);
+            int sheetCellPad=builder.sheetCellPad;
             float padBottom = sheetCellPad * density;
             float left = padBottom;
-            float top = sheetHeight - padBottom - sheetCellHeight * density;
+            float top = sheetHeight - padBottom - builder.sheetCellHeight * density;
             float right = canvasWidth - padBottom;
             float bottom = sheetHeight - padBottom;
-            float round = 10 * density;
+            float round = builder.round * density;
             if (roundRect == null) roundRect = new RectF();
             roundRect.set(left, top, right, bottom);
             canvas.drawRoundRect(roundRect, round, round, paint);
@@ -130,7 +132,7 @@ class PromptView extends ImageView {
             paint.setColor(Color.GRAY);
             paint.setStrokeWidth(1);
             paint.setAntiAlias(true);
-            top = bottom - sheetCellHeight * density;
+            top = bottom - builder.sheetCellHeight  * density;
             canvas.drawLine(left, top, right, top, paint);
 
             PromptButton button = buttons[0];
@@ -142,19 +144,20 @@ class PromptView extends ImageView {
             paint.setAntiAlias(true);
             paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
 
-            bottom = sheetHeight - sheetCellPad * density - sheetCellHeight * density / 2 + textRect.height() / 2;
+            bottom = sheetHeight - sheetCellPad * density - builder.sheetCellHeight  * density / 2 + textRect.height() / 2;
             left = canvasWidth / 2 - textRect.width() / 2;
             if (button.getRect() == null)
-                button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - sheetCellPad * density - sheetCellHeight * density,
-                        canvasWidth - sheetCellPad * density, canvasHeight - sheetCellPad * density - sheetCellHeight * density + sheetCellHeight * density));
+                button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight -
+                        sheetCellPad * density - builder.sheetCellHeight  * density,
+                        canvasWidth - sheetCellPad * density, canvasHeight - sheetCellPad * density ));
             canvas.drawText(buttonText, left, bottom, paint);
             if (button.isFocus()) {
                 paint.reset();
                 paint.setAntiAlias(true);
                 paint.setColor(Color.BLACK);
-                paint.setAlpha(pressAlph);
+                paint.setAlpha(builder.sheetPressAlph);
                 RectF rect = new RectF(sheetCellPad * density, sheetHeight -
-                        sheetCellPad * density - sheetCellHeight * density,
+                        sheetCellPad * density - builder.sheetCellHeight  * density,
                         canvasWidth - sheetCellPad * density, sheetHeight -
                         sheetCellPad * density);
                 canvas.drawRoundRect(rect, round, round, paint);
@@ -169,17 +172,18 @@ class PromptView extends ImageView {
             paint.setAntiAlias(true);
             paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
 
-            bottom = sheetHeight - 1.5f * sheetCellPad * density - sheetCellHeight * density * 1.5f + textRect.height() / 2;
+            bottom = sheetHeight - 1.5f * sheetCellPad * density -
+                    builder.sheetCellHeight  * density * 1.5f + textRect.height() / 2;
             left = canvasWidth / 2 - textRect.width() / 2;
             if (button.getRect() == null)
-                button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - 2f * sheetCellHeight * density,
-                        canvasWidth - sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - sheetCellHeight * density));
+                button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - 2f * builder.sheetCellHeight  * density,
+                        canvasWidth - sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - builder.sheetCellHeight  * density));
             canvas.drawText(buttonText, left, bottom, paint);
             if (button.isFocus()) {
                 float[] outerR = new float[]{0, 0, 0, 0, round, round, round, round};
                 ShapeDrawable mDrawables = new ShapeDrawable(new RoundRectShape(outerR, null, null));
                 mDrawables.getPaint().setColor(Color.BLACK);
-                mDrawables.getPaint().setAlpha(pressAlph);
+                mDrawables.getPaint().setAlpha(builder.sheetPressAlph);
                 RectF rect = button.getRect();
                 Rect rectPre = new Rect((int) rect.left, (int) (rect.top - canvasHeight + sheetHeight),
                         (int) rect.right, (int) (rect.bottom - canvasHeight + sheetHeight));
@@ -197,11 +201,11 @@ class PromptView extends ImageView {
                 paint.setTextSize(density * button.getTextSize());
                 paint.setAntiAlias(true);
                 paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
-                bottom = sheetHeight - 1.5f * sheetCellPad * density - (i + 0.5f) * sheetCellHeight * density + textRect.height() / 2;
+                bottom = sheetHeight - 1.5f * sheetCellPad * density - (i + 0.5f) * builder.sheetCellHeight  * density + textRect.height() / 2;
                 left = canvasWidth / 2 - textRect.width() / 2;
                 if (button.getRect() == null)
-                    button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - (i + 1f) * sheetCellHeight * density,
-                            canvasWidth - sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - i * sheetCellHeight * density));
+                    button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - (i + 1f) * builder.sheetCellHeight  * density,
+                            canvasWidth - sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - i * builder.sheetCellHeight  * density));
                 canvas.drawText(buttonText, left, bottom, paint);
 
                 if (i != buttons.length - 1) {
@@ -209,7 +213,7 @@ class PromptView extends ImageView {
                     paint.setStrokeWidth(1);
                     paint.setAntiAlias(true);
 
-                    top = sheetHeight - 1.5f* padBottom - (i+1) * sheetCellHeight * density;
+                    top = sheetHeight - 1.5f* padBottom - (i+1) * builder.sheetCellHeight  * density;
 
                     canvas.drawLine(padBottom, top, canvasWidth - padBottom, top, paint);
 
@@ -223,7 +227,7 @@ class PromptView extends ImageView {
                         float[] outerR = new float[]{round, round, round, round, 0, 0, 0, 0};
                         ShapeDrawable mDrawables = new ShapeDrawable(new RoundRectShape(outerR, null, null));
                         mDrawables.getPaint().setColor(Color.BLACK);
-                        mDrawables.getPaint().setAlpha(pressAlph);
+                        mDrawables.getPaint().setAlpha(builder.sheetPressAlph);
                         mDrawables.setBounds(rectPre);
                         mDrawables.draw(canvas);
 
@@ -231,7 +235,7 @@ class PromptView extends ImageView {
                         paint.reset();
                         paint.setAntiAlias(true);
                         paint.setColor(Color.BLACK);
-                        paint.setAlpha(pressAlph);
+                        paint.setAlpha(builder.sheetPressAlph);
                         canvas.drawRect(rectPre, paint);
                     }
                 }
@@ -409,6 +413,7 @@ class PromptView extends ImageView {
         if (animator != null)
             animator.cancel();
         animator = null;
+        buttons=null;
 //        textRect = null;
 //        roundTouchRect = null;
         promptDialog.onDetach();
@@ -453,6 +458,8 @@ class PromptView extends ImageView {
             }
             for (final PromptButton button : buttons) {
                 if (button.getRect() != null && button.getRect().contains(x, y)) {
+
+
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         button.setFocus(true);
                         invalidate();
@@ -540,7 +547,7 @@ class PromptView extends ImageView {
 
         if (isSheet) {
             //计算高度
-            sheetHeight = (1.5f * sheetCellPad + sheetCellHeight * buttons.length) * density;
+            sheetHeight = (1.5f * builder.sheetCellPad + builder.sheetCellHeight  * buttons.length) * density;
             Log.i(TAG, "showSomthing: " + sheetHeight);
             startBottomToTopAnim();
         }
