@@ -189,36 +189,51 @@ class PromptView extends ImageView {
             }
 
             for (int i = 2; i < buttons.length; i++) {
-                if (i == buttons.length - 1) {
-                    button = buttons[i];
-                    buttonText = button.getText();
-                    paint.reset();
-                    paint.setColor(button.getTextColor());
-                    paint.setStrokeWidth(1 * density);
-                    paint.setTextSize(density * button.getTextSize());
-                    paint.setAntiAlias(true);
-                    paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
+                button = buttons[i];
+                buttonText = button.getText();
+                paint.reset();
+                paint.setColor(button.getTextColor());
+                paint.setStrokeWidth(1 * density);
+                paint.setTextSize(density * button.getTextSize());
+                paint.setAntiAlias(true);
+                paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
+                bottom = sheetHeight - 1.5f * sheetCellPad * density - (i + 0.5f) * sheetCellHeight * density + textRect.height() / 2;
+                left = canvasWidth / 2 - textRect.width() / 2;
+                if (button.getRect() == null)
+                    button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - (i + 1f) * sheetCellHeight * density,
+                            canvasWidth - sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - i * sheetCellHeight * density));
+                canvas.drawText(buttonText, left, bottom, paint);
 
-                    bottom = sheetHeight - 1.5f * sheetCellPad * density - (i + 0.5f) * sheetCellHeight * density + textRect.height() / 2;
-                    left = canvasWidth / 2 - textRect.width() / 2;
-                    if (button.getRect() == null)
-                        button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density -(i+1f) * sheetCellHeight * density,
-                                canvasWidth - sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - i * sheetCellHeight * density));
-                    canvas.drawText(buttonText, left, bottom, paint);
-                    if (button.isFocus()) {
+                if (i != buttons.length - 1) {
+                    paint.setColor(Color.GRAY);
+                    paint.setStrokeWidth(1);
+                    paint.setAntiAlias(true);
+
+                    top = sheetHeight - 1.5f* padBottom - (i+1) * sheetCellHeight * density;
+
+                    canvas.drawLine(padBottom, top, canvasWidth - padBottom, top, paint);
+
+                }
+
+                if (button.isFocus()) {
+                    RectF rect = button.getRect();
+                    Rect rectPre = new Rect((int) rect.left, (int) (rect.top - canvasHeight + sheetHeight),
+                            (int) rect.right, (int) (rect.bottom - canvasHeight + sheetHeight));
+                    if (i == buttons.length - 1) {
                         float[] outerR = new float[]{round, round, round, round, 0, 0, 0, 0};
                         ShapeDrawable mDrawables = new ShapeDrawable(new RoundRectShape(outerR, null, null));
                         mDrawables.getPaint().setColor(Color.BLACK);
                         mDrawables.getPaint().setAlpha(pressAlph);
-                        RectF rect = button.getRect();
-                        Rect rectPre = new Rect((int) rect.left, (int) (rect.top - canvasHeight + sheetHeight),
-                                (int) rect.right, (int) (rect.bottom - canvasHeight + sheetHeight));
                         mDrawables.setBounds(rectPre);
                         mDrawables.draw(canvas);
 
+                    } else {
+                        paint.reset();
+                        paint.setAntiAlias(true);
+                        paint.setColor(Color.BLACK);
+                        paint.setAlpha(pressAlph);
+                        canvas.drawRect(rectPre, paint);
                     }
-                }else{
-
                 }
             }
 
