@@ -105,4 +105,5 @@ public class PromptButton {
     public void setDelyClick(boolean delyClick) {
         isDelyClick = delyClick;
     }
+
 }

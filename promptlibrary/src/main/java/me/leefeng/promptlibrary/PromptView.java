@@ -11,6 +11,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -50,6 +52,12 @@ class PromptView extends ImageView {
     float buttonH;
     private boolean isSheet;
     private float bottomHeight;
+    private float sheetHeight;
+
+    private static final int sheetCellHeight = 54;
+    private static final int sheetCellPad = 13;
+
+    private final int pressAlph = 15;
 
     public PromptView(Context context) {
         super(context);
@@ -65,6 +73,8 @@ class PromptView extends ImageView {
 
     public PromptView(Activity context, Builder builder, PromptDialog promptDialog) {
         super(context);
+        density = getResources().getDisplayMetrics().density;
+
         this.builder = builder;
         this.promptDialog = promptDialog;
 
@@ -87,22 +97,41 @@ class PromptView extends ImageView {
 
         if (isSheet) {
 
+            if (roundTouchRect == null)
+                roundTouchRect = new RectF();
+            roundTouchRect.set(0, canvasHeight - bottomHeight, canvasWidth, canvasHeight);
 
             canvas.translate(0, canvasHeight - bottomHeight);
+//            paint.reset();
+//            paint.setAntiAlias(true);
+//            paint.setColor(Color.WHITE);
+//            canvas.drawRect(0, 0, canvasWidth, canvasHeight - sheetHeight, paint);
+
+
             paint.reset();
             paint.setAntiAlias(true);
             paint.setColor(Color.WHITE);
-            canvas.drawRect(0, 0, canvasWidth, canvasHeight - 400, paint);
+            paint.setAlpha(builder.roundAlpha);
+            float padBottom = sheetCellPad * density;
+            float left = padBottom;
+            float top = sheetHeight - padBottom - sheetCellHeight * density;
+            float right = canvasWidth - padBottom;
+            float bottom = sheetHeight - padBottom;
+            float round = 10 * density;
+            if (roundRect == null) roundRect = new RectF();
+            roundRect.set(left, top, right, bottom);
+            canvas.drawRoundRect(roundRect, round, round, paint);
 
-            roundTouchRect.set(0, canvasHeight - bottomHeight, 0, canvasHeight);
-
-            for (int i = 0; i < buttons.length; i++) {
-                PromptButton button = buttons[i];
-                
-
-
-
-            }
+            bottom = top - padBottom / 2;
+            top = 0;
+            roundRect.set(left, top, right, bottom);
+            canvas.drawRoundRect(roundRect, round, round, paint);
+//画分割线
+            paint.setColor(Color.GRAY);
+            paint.setStrokeWidth(1);
+            paint.setAntiAlias(true);
+            top = bottom - sheetCellHeight * density;
+            canvas.drawLine(left, top, right, top, paint);
 
             PromptButton button = buttons[0];
             String buttonText = button.getText();
@@ -113,9 +142,87 @@ class PromptView extends ImageView {
             paint.setAntiAlias(true);
             paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
 
-//            button.setTouchRect(new RectF(transLeft, transTop + top,
-//                    transLeft + popWidth, transTop + top + buttonH));
-            canvas.drawText(buttonText, 0, 0, paint);
+            bottom = sheetHeight - sheetCellPad * density - sheetCellHeight * density / 2 + textRect.height() / 2;
+            left = canvasWidth / 2 - textRect.width() / 2;
+            if (button.getRect() == null)
+                button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - sheetCellPad * density - sheetCellHeight * density,
+                        canvasWidth - sheetCellPad * density, canvasHeight - sheetCellPad * density - sheetCellHeight * density + sheetCellHeight * density));
+            canvas.drawText(buttonText, left, bottom, paint);
+            if (button.isFocus()) {
+                paint.reset();
+                paint.setAntiAlias(true);
+                paint.setColor(Color.BLACK);
+                paint.setAlpha(pressAlph);
+                RectF rect = new RectF(sheetCellPad * density, sheetHeight -
+                        sheetCellPad * density - sheetCellHeight * density,
+                        canvasWidth - sheetCellPad * density, sheetHeight -
+                        sheetCellPad * density);
+                canvas.drawRoundRect(rect, round, round, paint);
+            }
+            //第一个选择
+            button = buttons[1];
+            buttonText = button.getText();
+            paint.reset();
+            paint.setColor(button.getTextColor());
+            paint.setStrokeWidth(1 * density);
+            paint.setTextSize(density * button.getTextSize());
+            paint.setAntiAlias(true);
+            paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
+
+            bottom = sheetHeight - 1.5f * sheetCellPad * density - sheetCellHeight * density * 1.5f + textRect.height() / 2;
+            left = canvasWidth / 2 - textRect.width() / 2;
+            if (button.getRect() == null)
+                button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - 2f * sheetCellHeight * density,
+                        canvasWidth - sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - sheetCellHeight * density));
+            canvas.drawText(buttonText, left, bottom, paint);
+            if (button.isFocus()) {
+                float[] outerR = new float[]{0, 0, 0, 0, round, round, round, round};
+                ShapeDrawable mDrawables = new ShapeDrawable(new RoundRectShape(outerR, null, null));
+                mDrawables.getPaint().setColor(Color.BLACK);
+                mDrawables.getPaint().setAlpha(pressAlph);
+                RectF rect = button.getRect();
+                Rect rectPre = new Rect((int) rect.left, (int) (rect.top - canvasHeight + sheetHeight),
+                        (int) rect.right, (int) (rect.bottom - canvasHeight + sheetHeight));
+                mDrawables.setBounds(rectPre);
+                mDrawables.draw(canvas);
+
+            }
+
+            for (int i = 2; i < buttons.length; i++) {
+                if (i == buttons.length - 1) {
+                    button = buttons[i];
+                    buttonText = button.getText();
+                    paint.reset();
+                    paint.setColor(button.getTextColor());
+                    paint.setStrokeWidth(1 * density);
+                    paint.setTextSize(density * button.getTextSize());
+                    paint.setAntiAlias(true);
+                    paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
+
+                    bottom = sheetHeight - 1.5f * sheetCellPad * density - (i + 0.5f) * sheetCellHeight * density + textRect.height() / 2;
+                    left = canvasWidth / 2 - textRect.width() / 2;
+                    if (button.getRect() == null)
+                        button.setTouchRect(new RectF(sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density -(i+1f) * sheetCellHeight * density,
+                                canvasWidth - sheetCellPad * density, canvasHeight - 1.5f * sheetCellPad * density - i * sheetCellHeight * density));
+                    canvas.drawText(buttonText, left, bottom, paint);
+                    if (button.isFocus()) {
+                        float[] outerR = new float[]{round, round, round, round, 0, 0, 0, 0};
+                        ShapeDrawable mDrawables = new ShapeDrawable(new RoundRectShape(outerR, null, null));
+                        mDrawables.getPaint().setColor(Color.BLACK);
+                        mDrawables.getPaint().setAlpha(pressAlph);
+                        RectF rect = button.getRect();
+                        Rect rectPre = new Rect((int) rect.left, (int) (rect.top - canvasHeight + sheetHeight),
+                                (int) rect.right, (int) (rect.bottom - canvasHeight + sheetHeight));
+                        mDrawables.setBounds(rectPre);
+                        mDrawables.draw(canvas);
+
+                    }
+                }else{
+
+                }
+            }
+
+
             return;
         }
 
@@ -160,10 +267,9 @@ class PromptView extends ImageView {
         paint.setAntiAlias(true);
         paint.setColor(builder.roundColor);
         paint.setAlpha(builder.roundAlpha);
-        if (roundRect == null)
-            roundRect = new RectF();
-
-        roundRect.set(transLeft, transTop, transLeft + popWidth, transTop + popHeight);
+        if (roundTouchRect == null)
+            roundTouchRect = new RectF();
+        roundTouchRect.set(transLeft, transTop, transLeft + popWidth, transTop + popHeight);
         if (roundRect == null)
             roundRect = new RectF(0, 0, popWidth, popHeight);
         roundRect.set(0, 0, popWidth, popHeight);
@@ -267,15 +373,16 @@ class PromptView extends ImageView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         setScaleType(ScaleType.MATRIX);
-        paint = new Paint();
-
+        if (paint == null)
+            paint = new Paint();
         initData();
     }
 
     private void initData() {
-        textRect = new Rect();
-        roundTouchRect = new RectF();
-        density = getResources().getDisplayMetrics().density;
+        if (textRect == null)
+            textRect = new Rect();
+        if (roundRect == null)
+            roundTouchRect = new RectF();
 
         buttonW = density * 120;
         buttonH = density * 44;
@@ -287,11 +394,11 @@ class PromptView extends ImageView {
         if (animator != null)
             animator.cancel();
         animator = null;
-        textRect = null;
-        roundTouchRect = null;
+//        textRect = null;
+//        roundTouchRect = null;
         promptDialog.onDetach();
 //        promptDialog = null;
-
+        currentType = PROMPT_NONE;
     }
 
 
@@ -375,7 +482,6 @@ class PromptView extends ImageView {
     private void endAnimator() {
         if (animator != null && animator.isRunning()) {
             animator.end();
-
         }
     }
 
@@ -401,43 +507,29 @@ class PromptView extends ImageView {
     }
 
     public void showSomthing(int currentType) {
+        this.currentType = currentType;
         if (currentType == PROMPT_ALERT_WARN) {
             isSheet = buttons.length > 2;
         } else {
             isSheet = false;
         }
         endAnimator();
-//        int drawableId = R.drawable.ic_prompt_success;
-//        switch (currentType) {
-//            case PROMPT_SUCCESS:
-//                drawableId = R.drawable.ic_prompt_success;
-//                break;
-//            case PROMPT_ERROR:
-//                drawableId = R.drawable.ic_prompt_error;
-//                break;
-//            case PROMPT_INFO:
-//                drawableId = R.drawable.ic_prompt_info;
-//                break;
-//            case PROMPT_WARN:
-//                drawableId = R.drawable.ic_prompt_warn;
-//                break;
-//            case PROMPT_ALERT_WARN:
-//                drawableId = R.drawable.ic_prompt_alert_warn;
-//                break;
-//        }
         setImageDrawable(getResources().getDrawable(builder.icon));
         width = getDrawable().getMinimumWidth() / 2;
         height = getDrawable().getMinimumHeight() / 2;
-        this.currentType = currentType;
+
         if (max != null) {
             max.setRotate(0, width, height);
             setImageMatrix(max);
         }
-        invalidate();
 
         if (isSheet) {
+            //计算高度
+            sheetHeight = (1.5f * sheetCellPad + sheetCellHeight * buttons.length) * density;
+            Log.i(TAG, "showSomthing: " + sheetHeight);
             startBottomToTopAnim();
         }
+        invalidate();
     }
 
     /**
@@ -451,7 +543,7 @@ class PromptView extends ImageView {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 Float value = (Float) valueAnimator.getAnimatedValue();
-                bottomHeight = 300 * value;
+                bottomHeight = sheetHeight * value;
                 Log.i(TAG, "onAnimationUpdate: " + bottomHeight);
                 invalidate();
             }
@@ -485,7 +577,7 @@ class PromptView extends ImageView {
      * 底部Sheet 退出动画
      */
     public void dismiss() {
-        currentType = PROMPT_NONE;
+//        currentType = PROMPT_NONE;
         if (isSheet) {
 
             ValueAnimator bottomToTopAnim = ObjectAnimator.ofFloat(1, 0);
@@ -494,7 +586,7 @@ class PromptView extends ImageView {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     Float value = (Float) valueAnimator.getAnimatedValue();
-                    bottomHeight = 300 * value;
+                    bottomHeight = sheetHeight * value;
                     invalidate();
                 }
             });

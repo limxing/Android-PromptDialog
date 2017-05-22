@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -72,7 +73,7 @@ public class PromptDialog {
 
     private void initAnim(int widthPixels, int heightPixels) {
 
-         inDefaultAnim = new AnimationSet(true);
+        inDefaultAnim = new AnimationSet(true);
         ScaleAnimation scaleAnimation = new ScaleAnimation(2, 1f, 2,
                 1f, widthPixels * 0.5f, heightPixels * 0.45f);
         inDefaultAnim.addAnimation(scaleAnimation);
@@ -80,9 +81,10 @@ public class PromptDialog {
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
         inDefaultAnim.addAnimation(alphaAnimation);
         inDefaultAnim.setDuration(viewAnimDuration);
+        inDefaultAnim.setFillAfter(false);
         inDefaultAnim.setInterpolator(new DecelerateInterpolator());
 
-         outDefaultAnim = new AnimationSet(true);
+        outDefaultAnim = new AnimationSet(true);
         scaleAnimation = new ScaleAnimation(1, 2, 1,
                 2, widthPixels * 0.5f, heightPixels * 0.45f);
         alphaAnimation = new AlphaAnimation(1, 0);
@@ -90,15 +92,16 @@ public class PromptDialog {
         outDefaultAnim.addAnimation(scaleAnimation);
         outDefaultAnim.addAnimation(alphaAnimation);
         outDefaultAnim.setDuration(viewAnimDuration);
+        outDefaultAnim.setFillAfter(false);
         outDefaultAnim.setInterpolator(new AccelerateInterpolator());
 
 
-        inSheetAnim=new AlphaAnimation(0,1);
+        inSheetAnim = new AlphaAnimation(0, 1);
         inSheetAnim.setDuration(viewAnimDuration);
-
-        outSheetAnim=new AlphaAnimation(1,0);
+        inSheetAnim.setFillAfter(false);
+        outSheetAnim = new AlphaAnimation(1, 0);
         outSheetAnim.setDuration(viewAnimDuration);
-
+        outSheetAnim.setFillAfter(false);
 
 
     }
@@ -200,9 +203,9 @@ public class PromptDialog {
         decorView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                showSuccess( msg);
+                showSuccess(msg);
             }
-        },delay);
+        }, delay);
 
     }
 
@@ -221,8 +224,8 @@ public class PromptDialog {
     }
 
     private void showSomthing(int icon, int promptError, String msg, boolean withAnim) {
-        inAnim=inDefaultAnim;
-        outAnim=outDefaultAnim;
+        inAnim = inDefaultAnim;
+        outAnim = outDefaultAnim;
         Builder builder = Builder.getDefaultBuilder();
         builder.text(msg);
         builder.icon(icon);
@@ -259,13 +262,18 @@ public class PromptDialog {
         showWarnAlert(text, button1, button2, true);
     }
 
-    public void showAlert(String text, boolean withAnim, PromptButton... button) {
-        if (button.length>2){
-            inAnim=inSheetAnim;
-            outAnim=outSheetAnim;
-        }else{
-            inAnim=inDefaultAnim;
-            outAnim=outDefaultAnim;
+    public void showAlertSheet(String text, boolean withAnim, PromptButton... button) {
+        showAlert(text, withAnim, button);
+    }
+
+    private void showAlert(String text, boolean withAnim, PromptButton... button) {
+        if (button.length > 2) {
+            Log.i(TAG, "showAlert: " + promptView.getScrollY());
+            inAnim = inSheetAnim;
+            outAnim = outSheetAnim;
+        } else {
+            inAnim = inDefaultAnim;
+            outAnim = outDefaultAnim;
         }
         Builder builder = Builder.getAlertDefaultBuilder();
         builder.text(text);
@@ -286,9 +294,9 @@ public class PromptDialog {
      * @param withAnim 是否动画进入
      */
     public void showLoading(String msg, boolean withAnim) {
-        inAnim=inDefaultAnim;
-        outAnim=outDefaultAnim;
-        if (promptView.getCurrentType()!=PromptView.PROMPT_LOADING) {
+        inAnim = inDefaultAnim;
+        outAnim = outDefaultAnim;
+        if (promptView.getCurrentType() != PromptView.PROMPT_LOADING) {
             Builder builder = Builder.getDefaultBuilder();
             builder.icon(R.drawable.ic_prompt_loading);
             builder.text(msg);
@@ -297,7 +305,7 @@ public class PromptDialog {
             checkLoadView(withAnim);
             promptView.showLoading();
             dissmissAni(true);
-        }else{
+        } else {
             promptView.setText(msg);
         }
     }
@@ -404,7 +412,6 @@ public class PromptDialog {
             return true;
         }
     }
-
 
 
 }
