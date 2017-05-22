@@ -85,7 +85,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_system).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                promptDialog.dismiss();
+//                promptDialog.dismiss();
+
+
+                promptDialog.showAlert("",true,new PromptButton("取消",null),
+                        new PromptButton("取消",null),new PromptButton("取消",null));
+
+
             }
         });
         findViewById(R.id.main_customer).setOnClickListener(new View.OnClickListener() {
@@ -95,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("sadas");
-        progressDialog.show();
+//        ProgressDialog progressDialog = new ProgressDialog(this);
+//        progressDialog.setMessage("sadas");
+//        progressDialog.show();
     }
 
     /**

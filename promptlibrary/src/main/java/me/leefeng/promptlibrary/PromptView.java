@@ -1,5 +1,6 @@
 package me.leefeng.promptlibrary;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -46,6 +48,8 @@ class PromptView extends ImageView {
     private RectF roundTouchRect;
     float buttonW;
     float buttonH;
+    private boolean isSheet;
+    private float bottomHeight;
 
     public PromptView(Context context) {
         super(context);
@@ -70,23 +74,51 @@ class PromptView extends ImageView {
     @Override
     protected void onDraw(Canvas canvas) {
         if (paint == null) return;
+        if (canvasWidth == 0) {
+            canvasWidth = getWidth();
+            canvasHeight = getHeight();
+        }
+
         paint.reset();
         paint.setAntiAlias(true);
         paint.setColor(builder.backColor);
         paint.setAlpha(builder.backAlpha);
         canvas.drawRect(0, 0, canvasWidth, canvasHeight, paint);
 
-        if(buttons.length>2){
+        if (isSheet) {
+
+
+            canvas.translate(0, canvasHeight - bottomHeight);
+            paint.reset();
+            paint.setAntiAlias(true);
+            paint.setColor(Color.WHITE);
+            canvas.drawRect(0, 0, canvasWidth, canvasHeight - 400, paint);
+
+            roundTouchRect.set(0, canvasHeight - bottomHeight, 0, canvasHeight);
+
+            for (int i = 0; i < buttons.length; i++) {
+                PromptButton button = buttons[i];
+                
 
 
 
+            }
+
+            PromptButton button = buttons[0];
+            String buttonText = button.getText();
+            paint.reset();
+            paint.setColor(button.getTextColor());
+            paint.setStrokeWidth(1 * density);
+            paint.setTextSize(density * button.getTextSize());
+            paint.setAntiAlias(true);
+            paint.getTextBounds(buttonText, 0, buttonText.length(), textRect);
+
+//            button.setTouchRect(new RectF(transLeft, transTop + top,
+//                    transLeft + popWidth, transTop + top + buttonH));
+            canvas.drawText(buttonText, 0, 0, paint);
             return;
         }
 
-        if (canvasWidth == 0) {
-            canvasWidth = getWidth();
-            canvasHeight = getHeight();
-        }
 
         String text = builder.text;
         float pad = builder.padding * density;
@@ -128,8 +160,10 @@ class PromptView extends ImageView {
         paint.setAntiAlias(true);
         paint.setColor(builder.roundColor);
         paint.setAlpha(builder.roundAlpha);
-        if (roundTouchRect == null)
-            roundTouchRect = new RectF(transLeft, transTop, transLeft + popWidth, transTop + popHeight);
+        if (roundRect == null)
+            roundRect = new RectF();
+
+        roundRect.set(transLeft, transTop, transLeft + popWidth, transTop + popHeight);
         if (roundRect == null)
             roundRect = new RectF(0, 0, popWidth, popHeight);
         roundRect.set(0, 0, popWidth, popHeight);
@@ -234,11 +268,13 @@ class PromptView extends ImageView {
         super.onAttachedToWindow();
         setScaleType(ScaleType.MATRIX);
         paint = new Paint();
+
         initData();
     }
 
     private void initData() {
         textRect = new Rect();
+        roundTouchRect = new RectF();
         density = getResources().getDisplayMetrics().density;
 
         buttonW = density * 120;
@@ -294,7 +330,7 @@ class PromptView extends ImageView {
                 promptDialog.dismiss();
             }
             for (final PromptButton button : buttons) {
-                if (button.getRect().contains(x, y)) {
+                if (button.getRect() != null && button.getRect().contains(x, y)) {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         button.setFocus(true);
                         invalidate();
@@ -347,6 +383,11 @@ class PromptView extends ImageView {
      *
      */
     public void showLoading() {
+        if (currentType == PROMPT_ALERT_WARN) {
+            isSheet = buttons.length > 2;
+        } else {
+            isSheet = false;
+        }
         setImageDrawable(getResources().getDrawable(builder.icon));
         width = getDrawable().getMinimumWidth() / 2;
         height = getDrawable().getMinimumHeight() / 2;
@@ -360,6 +401,11 @@ class PromptView extends ImageView {
     }
 
     public void showSomthing(int currentType) {
+        if (currentType == PROMPT_ALERT_WARN) {
+            isSheet = buttons.length > 2;
+        } else {
+            isSheet = false;
+        }
         endAnimator();
 //        int drawableId = R.drawable.ic_prompt_success;
 //        switch (currentType) {
@@ -388,10 +434,34 @@ class PromptView extends ImageView {
             setImageMatrix(max);
         }
         invalidate();
+
+        if (isSheet) {
+            startBottomToTopAnim();
+        }
+    }
+
+    /**
+     * 底部Sheet
+     */
+    private void startBottomToTopAnim() {
+        ValueAnimator bottomToTopAnim = ObjectAnimator.ofFloat(0, 1);
+//        bottomToTopAnim.setStartDelay(100);
+        bottomToTopAnim.setDuration(300);
+        bottomToTopAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                Float value = (Float) valueAnimator.getAnimatedValue();
+                bottomHeight = 300 * value;
+                Log.i(TAG, "onAnimationUpdate: " + bottomHeight);
+                invalidate();
+            }
+        });
+        bottomToTopAnim.start();
     }
 
 
     void showSomthingAlert(PromptButton... button) {
+
         this.buttons = button;
         showSomthing(PROMPT_ALERT_WARN);
 
@@ -409,5 +479,27 @@ class PromptView extends ImageView {
     public void setText(String msg) {
         builder.text(msg);
         invalidate();
+    }
+
+    /**
+     * 底部Sheet 退出动画
+     */
+    public void dismiss() {
+        currentType = PROMPT_NONE;
+        if (isSheet) {
+
+            ValueAnimator bottomToTopAnim = ObjectAnimator.ofFloat(1, 0);
+            bottomToTopAnim.setDuration(300);
+            bottomToTopAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    Float value = (Float) valueAnimator.getAnimatedValue();
+                    bottomHeight = 300 * value;
+                    invalidate();
+                }
+            });
+            bottomToTopAnim.start();
+        }
+
     }
 }
