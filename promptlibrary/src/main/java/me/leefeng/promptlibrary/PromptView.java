@@ -11,6 +11,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.util.AttributeSet;
@@ -34,6 +36,7 @@ class PromptView extends ImageView {
     public static final int PROMPT_ALERT_WARN = 107;
     private static final String TAG = "LOADVIEW";
     public static final int PROMPT_CUSTOM = 108;
+    public static final int PROMPT_AD = 109;
     private PromptDialog promptDialog;
     private Builder builder;
     private int width;
@@ -53,6 +56,9 @@ class PromptView extends ImageView {
     private boolean isSheet;
     private float bottomHeight;
     private float sheetHeight;
+    private Drawable drawableClose;
+    private int transX;
+    private int transY;
 
 //    private static final int sheetCellHeight = 54;
 //    private static final int sheetCellPad = 13;
@@ -94,7 +100,28 @@ class PromptView extends ImageView {
         paint.setColor(builder.backColor);
         paint.setAlpha(builder.backAlpha);
         canvas.drawRect(0, 0, canvasWidth, canvasHeight, paint);
-
+        if (currentType == PROMPT_AD) {
+            Drawable drawable = getDrawable();
+            if (drawable == null) return;
+            Rect bound = drawable.getBounds();
+            transX = canvasWidth / 2 - bound.width() / 2;
+            transY = canvasHeight / 2 - bound.height() / 2 - bound.height() / 10;
+            canvas.translate(transX, transY);
+            drawable.draw(canvas);
+            if (drawableClose == null)
+                drawableClose = getResources().getDrawable(R.drawable.ic_prompt_close);
+            width = drawableClose.getMinimumWidth() / 2;
+            height = drawableClose.getMinimumHeight() / 2;
+            int left = bound.width() / 2 - width;
+//            int top = canvasHeight - canvasHeight / 2 + bound.height() / 2 + bound.height() / 10 + height * 4;
+            int top = bound.height() + height;
+            int right = left + width * 2;
+            int bottom = top + height * 2;
+            drawableClose.setBounds(left, top, right, bottom);
+            drawableClose.draw(canvas);
+            canvas.save();
+            return;
+        }
         if (isSheet) {
             String text = builder.text;
             boolean textNotNull = text != null && text.length() > 0;
@@ -152,7 +179,7 @@ class PromptView extends ImageView {
             if (builder.sheetCellPad == 0) {
                 canvas.drawLine(left, bottom, right, bottom, paint);
             }
-            if (textNotNull){
+            if (textNotNull) {
                 canvas.drawLine(left, 0, right, 0, paint);
             }
 
@@ -436,6 +463,7 @@ class PromptView extends ImageView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         setScaleType(ScaleType.MATRIX);
+
         if (paint == null)
             paint = new Paint();
         initData();
@@ -454,6 +482,7 @@ class PromptView extends ImageView {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+
         if (animator != null)
             animator.cancel();
         animator = null;
@@ -497,7 +526,8 @@ class PromptView extends ImageView {
         float x = event.getX();
         float y = event.getY();
         if (currentType == PROMPT_ALERT_WARN) {
-            if (builder.cancleAble && event.getAction() == MotionEvent.ACTION_UP&& !roundTouchRect.contains(x, y)) {
+
+            if (builder.cancleAble && event.getAction() == MotionEvent.ACTION_UP && !roundTouchRect.contains(x, y)) {
                 promptDialog.dismiss();
             }
             for (final PromptButton button : buttons) {
@@ -537,6 +567,17 @@ class PromptView extends ImageView {
                     invalidate();
                 }
             }
+        } else if (currentType == PROMPT_AD) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (drawableClose.getBounds()
+                        .contains((int) event.getX() - transX, (int) event.getY() - transY)) {
+                    promptDialog.dismiss();
+                } else if (getDrawable().getBounds().contains((int) event.getX() - transX, (int) event.getY() - transY)) {
+                    promptDialog.onAdClick();
+                    promptDialog.dismiss();
+                }
+
+            }
         }
         return !builder.touchAble;
     }
@@ -545,6 +586,7 @@ class PromptView extends ImageView {
     /**
      * 停止旋转
      */
+
     private void endAnimator() {
         if (animator != null && animator.isRunning()) {
             animator.end();
@@ -619,7 +661,6 @@ class PromptView extends ImageView {
 
 
     void showSomthingAlert(PromptButton... button) {
-
         this.buttons = button;
         showSomthing(PROMPT_ALERT_WARN);
 
@@ -659,5 +700,10 @@ class PromptView extends ImageView {
             bottomToTopAnim.start();
         }
 
+    }
+
+    public void showAd() {
+        this.currentType = PROMPT_AD;
+        endAnimator();
     }
 }

@@ -14,6 +14,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 
 
 /**
@@ -38,6 +39,7 @@ public class PromptDialog {
     private AlphaAnimation outSheetAnim;
     private AnimationSet inDefaultAnim;
     private AnimationSet outDefaultAnim;
+    private OnAdClickListener adListener;
 
     /**
      * 设置进入 进出动画持续的事件默认300毫秒
@@ -95,15 +97,14 @@ public class PromptDialog {
         outDefaultAnim.setFillAfter(false);
         outDefaultAnim.setInterpolator(new AccelerateInterpolator());
 
-        alphaAnimation= new AlphaAnimation(0, 1);
+        alphaAnimation = new AlphaAnimation(0, 1);
         scaleAnimation = new ScaleAnimation(1, 1, 1,
                 1, widthPixels * 0.5f, heightPixels * 0.5f);
         inSheetAnim = new AnimationSet(true);
-        inSheetAnim .addAnimation(alphaAnimation);
+        inSheetAnim.addAnimation(alphaAnimation);
         inSheetAnim.addAnimation(scaleAnimation);
         inSheetAnim.setDuration(viewAnimDuration);
         inSheetAnim.setFillAfter(false);
-
 
 
         outSheetAnim = new AlphaAnimation(1, 0);
@@ -295,6 +296,23 @@ public class PromptDialog {
 
     }
 
+    public ImageView showAd(boolean withAnim,OnAdClickListener listener) {
+        this.adListener=listener;
+        inAnim = inSheetAnim;
+        outAnim = outSheetAnim;
+        Builder builder = Builder.getDefaultBuilder();
+        builder.touchAble(false);
+//        builder.text(msg);
+//        builder.icon(icon);
+//        builder.
+        closeInput();
+        checkLoadView(withAnim);
+        promptView.setBuilder(builder);
+        promptView.showAd();
+        dissmissAni(true);
+        return promptView;
+    }
+
     /**
      * 展示loading
      *
@@ -413,7 +431,8 @@ public class PromptDialog {
         if (isShowing && promptView.getCurrentType() == PromptView.PROMPT_LOADING) {
             return false;
         }
-        if (isShowing && promptView.getCurrentType() == PromptView.PROMPT_ALERT_WARN) {
+        if (isShowing && (promptView.getCurrentType() == PromptView.PROMPT_ALERT_WARN ||
+                promptView.getCurrentType() == PromptView.PROMPT_AD)) {
             dismiss();
             return false;
         } else {
@@ -422,4 +441,9 @@ public class PromptDialog {
     }
 
 
+    public void onAdClick() {
+        if (adListener != null) {
+            adListener.onAdClick();
+        }
+    }
 }
