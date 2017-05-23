@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 //                promptDialog.getAlertDefaultBuilder().sheetCellPad(0).round(0);
                 //设置按钮的特点，颜色大小什么的，具体看PromptButton的成员变量
                 PromptButton cancle = new PromptButton("取消", null);
-                cancle.setTextColor(Color.BLUE);
+                cancle.setTextColor(Color.parseColor("#0076ff"));
                 //设置显示的文字大小及颜色
 //                promptDialog.getAlertDefaultBuilder().textSize(12).textColor(Color.GRAY);
                 //默认两个按钮为Alert对话框，大于三个按钮的为底部SHeet形式展现
