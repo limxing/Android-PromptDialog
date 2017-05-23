@@ -21,7 +21,7 @@ allprojects {
 ```
 dependencies {
     ...
-    compile 'com.github.limxing:Android-PromptDialog:1.0.5'
+    compile 'com.github.limxing:Android-PromptDialog:1.1.1'
 }
 
 ```
