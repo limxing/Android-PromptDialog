@@ -88,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
 //                promptDialog.dismiss();
 
 
-                promptDialog.showAlert("",true,new PromptButton("取消",null),
-                        new PromptButton("取消",null),new PromptButton("取消",null));
+                promptDialog.showAlertSheet("", true, new PromptButton("取消1", null),
+                        new PromptButton("取消2", null), new PromptButton("取消3", null),
+                        new PromptButton("取消4", null));
 
 
             }
