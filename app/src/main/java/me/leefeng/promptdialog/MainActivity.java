@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
                 PromptButton cancle = new PromptButton("取消", null);
                 cancle.setTextColor(Color.BLUE);
                 //设置显示的文字大小及颜色
-                promptDialog.getAlertDefaultBuilder().textSize(12).textColor(Color.GRAY);
+//                promptDialog.getAlertDefaultBuilder().textSize(12).textColor(Color.GRAY);
                 //默认两个按钮为Alert对话框，大于三个按钮的为底部SHeet形式展现
-                promptDialog.showAlertSheet("请选择选取图片方式", true, cancle,
+                promptDialog.showAlertSheet("", true, cancle,
                         new PromptButton("选项1", null), new PromptButton("选项2", null),
                         new PromptButton("选项3", null), new PromptButton("选项4", null));
 

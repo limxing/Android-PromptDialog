@@ -5,16 +5,22 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -59,6 +65,7 @@ class PromptView extends ImageView {
     private Drawable drawableClose;
     private int transX;
     private int transY;
+    private Bitmap adBitmap;
 
 //    private static final int sheetCellHeight = 54;
 //    private static final int sheetCellPad = 13;
@@ -86,6 +93,26 @@ class PromptView extends ImageView {
 
     }
 
+    /**
+     * 根据原图添加圆角
+     *
+     * @param source
+     * @return
+     */
+    private Bitmap createRoundConerImage(Bitmap source) {
+        final Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        Bitmap target = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(target);
+        RectF rect = new RectF(0, 0, source.getWidth(), source.getHeight());
+        float mRadius = 50;
+        canvas.drawRoundRect(rect, mRadius, mRadius, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(source, 0, 0, paint);
+//        source.draw(canvas);
+        return target;
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -107,7 +134,19 @@ class PromptView extends ImageView {
             transX = canvasWidth / 2 - bound.width() / 2;
             transY = canvasHeight / 2 - bound.height() / 2 - bound.height() / 10;
             canvas.translate(transX, transY);
-            drawable.draw(canvas);
+
+            if (adBitmap == null) {
+                Bitmap.Config config =
+                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                                : Bitmap.Config.RGB_565;
+                Bitmap bitmap = Bitmap.createBitmap(drawable.getMinimumWidth(), drawable.getMinimumHeight(), config);
+                Canvas ca = new Canvas(bitmap);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                drawable.draw(ca);
+                adBitmap = createRoundConerImage(bitmap);
+            }
+            canvas.drawBitmap(adBitmap, 0, 0, null);
+//            drawable.draw(canvas);
             if (drawableClose == null)
                 drawableClose = getResources().getDrawable(R.drawable.ic_prompt_close);
             width = drawableClose.getMinimumWidth() / 2;
@@ -483,6 +522,11 @@ class PromptView extends ImageView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
+        if (adBitmap != null) {
+            adBitmap.recycle();
+        }
+        adBitmap = null;
+
         if (animator != null)
             animator.cancel();
         animator = null;
@@ -492,6 +536,7 @@ class PromptView extends ImageView {
         promptDialog.onDetach();
 //        promptDialog = null;
         currentType = PROMPT_NONE;
+
     }
 
 
@@ -569,10 +614,11 @@ class PromptView extends ImageView {
             }
         } else if (currentType == PROMPT_AD) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (drawableClose.getBounds()
-                        .contains((int) event.getX() - transX, (int) event.getY() - transY)) {
+                if ((drawableClose != null && drawableClose.getBounds()
+                        .contains((int) event.getX() - transX, (int) event.getY() - transY)) || builder.cancleAble) {
                     promptDialog.dismiss();
-                } else if (getDrawable().getBounds().contains((int) event.getX() - transX, (int) event.getY() - transY)) {
+                } else if (getDrawable() !=
+                        null && getDrawable().getBounds().contains((int) event.getX() - transX, (int) event.getY() - transY)) {
                     promptDialog.onAdClick();
                     promptDialog.dismiss();
                 }

@@ -270,8 +270,8 @@ public class PromptDialog {
         showWarnAlert(text, button1, button2, true);
     }
 
-    public void showAlertSheet(String text, boolean withAnim, PromptButton... button) {
-        showAlert(text, withAnim, button);
+    public void showAlertSheet(String title, boolean withAnim, PromptButton... button) {
+        showAlert(title, withAnim, button);
     }
 
     private void showAlert(String text, boolean withAnim, PromptButton... button) {
