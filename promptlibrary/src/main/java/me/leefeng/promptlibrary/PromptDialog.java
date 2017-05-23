@@ -34,7 +34,7 @@ public class PromptDialog {
     private boolean outAnimRunning;
     public static long viewAnimDuration = 300;
     private boolean isShowing;
-    private AlphaAnimation inSheetAnim;
+    private AnimationSet inSheetAnim;
     private AlphaAnimation outSheetAnim;
     private AnimationSet inDefaultAnim;
     private AnimationSet outDefaultAnim;
@@ -95,10 +95,17 @@ public class PromptDialog {
         outDefaultAnim.setFillAfter(false);
         outDefaultAnim.setInterpolator(new AccelerateInterpolator());
 
-
-        inSheetAnim = new AlphaAnimation(0, 1);
+        alphaAnimation= new AlphaAnimation(0, 1);
+        scaleAnimation = new ScaleAnimation(1, 1, 1,
+                1, widthPixels * 0.5f, heightPixels * 0.5f);
+        inSheetAnim = new AnimationSet(true);
+        inSheetAnim .addAnimation(alphaAnimation);
+        inSheetAnim.addAnimation(scaleAnimation);
         inSheetAnim.setDuration(viewAnimDuration);
         inSheetAnim.setFillAfter(false);
+
+
+
         outSheetAnim = new AlphaAnimation(1, 0);
         outSheetAnim.setDuration(viewAnimDuration);
         outSheetAnim.setFillAfter(false);
@@ -269,6 +276,7 @@ public class PromptDialog {
     private void showAlert(String text, boolean withAnim, PromptButton... button) {
         if (button.length > 2) {
             Log.i(TAG, "showAlert: " + promptView.getScrollY());
+
             inAnim = inSheetAnim;
             outAnim = outSheetAnim;
         } else {
