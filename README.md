@@ -1,5 +1,5 @@
 # Android-PromptDialog
-提示窗口，正在加载中，确认对话框,非组合控件，自定义ImageView实现，感谢star  
+提示窗口，正在加载中，确认对话框,广告展示，底部Sheet选项，非组合控件，感谢star  
 
 <img src="screen1.gif"/><img src="screen2.jpg"/><img src="screen3.jpg"/><img src="screen4.jpg"/>
 
