@@ -2,6 +2,8 @@ package me.leefeng.promptdialog;
 
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -21,6 +23,26 @@ public class ExampleUnitTest {
 //            System.out.println("");
 //        }
         test18_2();
+       new Thread(){
+           @Override
+           public void run() {
+               for (int i=0 ; i<300 ;i++){
+                   System.out.println("第"+i+"次");
+                   try {
+                       sleep(1000);
+                       Runtime.getRuntime().exec("adb shell am start -n me.leefeng.beida/me.leefeng.beida.welcome.WelcomeActivity");
+                        sleep(60000);
+                       Runtime.getRuntime().exec("adb shell am force-stop me.leefeng.beida");
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   } catch (InterruptedException e) {
+                       e.printStackTrace();
+                   }
+               }
+           }
+       }.run();
+
+
 
     }
 

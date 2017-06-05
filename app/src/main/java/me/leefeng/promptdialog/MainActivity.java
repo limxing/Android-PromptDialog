@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 promptDialog.showCustom(R.mipmap.ic_launcher, "自定义图标的");
             }
         });
+//        u0_a280   8011  2923  1474704 209280 SyS_epoll_ 0000000000 S me.leefeng.beida
+
         findViewById(R.id.main_ad).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(MainActivity.this).load("https://timgsa.baidu.com/timg?image&quality=80&" +
                         "size=b9999_10000&sec=1495518782659&di=25b120262114749ae8543652d2de5715&" +
                         "imgtype=0&src=http%3A%2F%2Fimg.tupianzj.com%2Fuploads%2Fallimg%2F160316%2F9-160316152R5.jpg")
+//                        .placeholder(getResources().getDrawable(R.drawable.ic_prompt_holder))
                         .into(promptDialog.showAd(true, new OnAdClickListener() {
                             @Override
                             public void onAdClick() {
