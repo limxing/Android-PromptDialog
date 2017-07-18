@@ -16,6 +16,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -43,6 +44,7 @@ class PromptView extends ImageView {
     private static final String TAG = "LOADVIEW";
     public static final int PROMPT_CUSTOM = 108;
     public static final int PROMPT_AD = 109;
+    public static final int CUSTOMER_LOADING = 110;
     private PromptDialog promptDialog;
     private Builder builder;
     private int width;
@@ -751,5 +753,30 @@ class PromptView extends ImageView {
     public void showAd() {
         this.currentType = PROMPT_AD;
         endAnimator();
+    }
+
+    /**
+     * 展示自定义的loading
+     */
+    public void showCustomLoading() {
+        if (currentType == PROMPT_ALERT_WARN) {
+            isSheet = buttons.length > 2;
+        } else {
+            isSheet = false;
+        }
+        setImageDrawable(getResources().getDrawable(builder.icon));
+        width = getDrawable().getMinimumWidth() / 2;
+        height = getDrawable().getMinimumHeight() / 2;
+        AnimationDrawable animationDrawable = (AnimationDrawable) getDrawable();
+        animationDrawable.start();
+        currentType = CUSTOMER_LOADING;
+    }
+
+    /**
+     * 停止自定义的loading
+     */
+    public void stopCustomerLoading() {
+        AnimationDrawable animationDrawable = (AnimationDrawable) getDrawable();
+        animationDrawable.stop();
     }
 }

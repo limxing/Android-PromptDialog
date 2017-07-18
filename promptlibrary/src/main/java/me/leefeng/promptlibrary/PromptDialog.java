@@ -145,6 +145,10 @@ public class PromptDialog {
                 } else {
                     outAnim.setStartOffset(0);
                 }
+                if (promptView.getCurrentType() == PromptView.CUSTOMER_LOADING){
+                    promptView.stopCustomerLoading();
+                }
+
                 promptView.dismiss();
                 promptView.startAnimation(outAnim);
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -445,5 +449,28 @@ public class PromptDialog {
         if (adListener != null) {
             adListener.onAdClick();
         }
+    }
+    /**
+     * 加载自定义的loading
+     * @param logo_loading 图片数组
+     * @param msg 展现消息
+     */
+    public void showCustomLoading(int logo_loading, String msg) {
+
+        inAnim = inDefaultAnim;
+        outAnim = outDefaultAnim;
+        if (promptView.getCurrentType() != PromptView.PROMPT_LOADING) {
+            Builder builder = Builder.getDefaultBuilder();
+            builder.icon(logo_loading);
+            builder.text(msg);
+            promptView.setBuilder(builder);
+            closeInput();
+            checkLoadView(true);
+            promptView.showCustomLoading();
+            dissmissAni(true);
+        } else {
+            promptView.setText(msg);
+        }
+
     }
 }
