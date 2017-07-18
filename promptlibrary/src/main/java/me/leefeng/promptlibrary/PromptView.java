@@ -551,7 +551,7 @@ class PromptView extends ImageView {
             animator = ValueAnimator.ofInt(0, 12);
             animator.setDuration(12 * 80);
             animator.setInterpolator(new LinearInterpolator());
-            animator.setRepeatCount(Integer.MAX_VALUE);
+            animator.setRepeatCount(100000);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
