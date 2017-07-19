@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
@@ -553,7 +554,7 @@ class PromptView extends ImageView {
             animator = ValueAnimator.ofInt(0, 12);
             animator.setDuration(12 * 80);
             animator.setInterpolator(new LinearInterpolator());
-            animator.setRepeatCount(100000);
+            animator.setRepeatCount(Animation.INFINITE);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
