@@ -459,7 +459,7 @@ public class PromptDialog {
 
         inAnim = inDefaultAnim;
         outAnim = outDefaultAnim;
-        if (promptView.getCurrentType() != PromptView.PROMPT_LOADING) {
+        if (promptView.getCurrentType() != PromptView.CUSTOMER_LOADING) {
             Builder builder = Builder.getDefaultBuilder();
             builder.icon(logo_loading);
             builder.text(msg);

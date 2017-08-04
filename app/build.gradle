@@ -30,5 +30,5 @@ dependencies {
     compile project(':promptlibrary')
     compile 'com.github.bumptech.glide:glide:3.6.1'
     //    compile 'com.github.limxing:Android-PromptDialog:1.0.0'
-    compile files('libs/MapSDK_fat.jar')
+//    compile files('libs/MapSDK_fat.jar')
 }
