@@ -40,6 +40,8 @@ public class PromptDialog {
     private AnimationSet inDefaultAnim;
     private AnimationSet outDefaultAnim;
     private OnAdClickListener adListener;
+    private Runnable runnable;
+    private Handler handler;
 
     /**
      * 设置进入 进出动画持续的事件默认300毫秒
@@ -70,6 +72,7 @@ public class PromptDialog {
         initAnim(context.getResources().getDisplayMetrics().widthPixels,
                 context.getResources().getDisplayMetrics().heightPixels);
         inputmanger = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        handler = new Handler();
     }
 
 
@@ -145,7 +148,7 @@ public class PromptDialog {
                 } else {
                     outAnim.setStartOffset(0);
                 }
-                if (promptView.getCurrentType() == PromptView.CUSTOMER_LOADING){
+                if (promptView.getCurrentType() == PromptView.CUSTOMER_LOADING) {
                     promptView.stopCustomerLoading();
                 }
 
@@ -300,8 +303,8 @@ public class PromptDialog {
 
     }
 
-    public ImageView showAd(boolean withAnim,OnAdClickListener listener) {
-        this.adListener=listener;
+    public ImageView showAd(boolean withAnim, OnAdClickListener listener) {
+        this.adListener = listener;
         inAnim = inSheetAnim;
         outAnim = outSheetAnim;
         Builder builder = Builder.getDefaultBuilder();
@@ -340,8 +343,28 @@ public class PromptDialog {
         }
     }
 
+    /**
+     * 展示加载中
+     *
+     * @param msg
+     */
     public void showLoading(String msg) {
         showLoading(msg, true);
+    }
+
+    /** 延迟展示loading
+     * @param msg
+     * @param time
+     */
+    public void showLoadingWithDelay(final String msg, long time) {
+        if (runnable != null) handler.removeCallbacks(runnable);
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                showLoading(msg);
+            }
+        };
+        handler.postDelayed(runnable, time);
 
     }
 
@@ -450,10 +473,12 @@ public class PromptDialog {
             adListener.onAdClick();
         }
     }
+
     /**
      * 加载自定义的loading
+     *
      * @param logo_loading 图片数组
-     * @param msg 展现消息
+     * @param msg          展现消息
      */
     public void showCustomLoading(int logo_loading, String msg) {
 
@@ -472,5 +497,22 @@ public class PromptDialog {
             promptView.setText(msg);
         }
 
+    }
+
+    /**
+     * 延迟加载自定义loading
+     *
+     * @param logo_loading
+     * @param msg
+     * @param time
+     */
+    public void showCustomerLoadingWithDelay(final int logo_loading, final String msg, long time) {
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                showCustomLoading(logo_loading, msg);
+            }
+        };
+        handler.postDelayed(runnable, time);
     }
 }
